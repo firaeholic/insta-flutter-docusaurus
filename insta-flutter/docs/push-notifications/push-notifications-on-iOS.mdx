@@ -1,0 +1,53 @@
+# Push Notifications on iOS  
+
+Setting up push notifications on iOS is slightly more difficult, since you need to properly configure your own secure certificates with Apple’s servers (APNs).
+
+On a high level, here’s what you need to do in order to enable push notifications on iOS:
+
+__1. Update your Server Key__
+
+__2. Obtain APNs certificates from Apple__
+
+__3. Upload the .p12 certificate to Firebase__
+
+This is general setup, and it’s not specific to our templates. You can follow the [official Apple’s documentation](https://developer.apple.com/documentation/usernotifications/establishing-a-certificate-based-connection-to-apns) to set up your APNs, if you run into any issues.
+
+Otherwise, you can just follow the next steps:
+
+Head over to [Apple](https://developer.apple.com/), click “__Account__” and log into your developer account.  
+
+![](/img/Screen-Shot-2019-01-28-at-8.41.33-PM.png)  
+
+  + In the left menu, select “__Certificates, IDs & Profiles__“
+  + In the Identifiers section menu, select “App IDs” and click the “Add New App ID” button
+  + Fill out __App ID Description__ & __Bundle ID fields.__ Check “__Push Notifications__” and click “__Continue__“. The  on the next screen click “__Register__” 
+
+![](/img/Screen-Shot-2019-01-28-at-8.43.45-PM-1024x634.png)  
+
+  + In the new “App IDs” list, select the newly created App ID and click “__Edit__“.  
+
+  ![](/img/Screen-Shot-2019-01-28-at-8.46.21-PM-1024x304.png)  
+
+  ![](/img/Screen-Shot-2019-01-28-at-8.46.42-PM-1024x582.png)  
+
+  + Scroll down to the “__Push Notifications__” section and click on “__Create Certificate__” (you’re good with Development SSL Certificate for now) – you’ll create the other one only when you submit your app to the App Store
+  + Follow the instructions for creating a CSR certificate from a Certificate Authority, using Keychain Access app on your laptop. And then click “__Continue__”  
+
+  ![](/img/Screen-Shot-2019-01-28-at-8.49.54-PM.png)  
+
+  ![](/img/Screen-Shot-2019-01-28-at-8.53.00-PM.png)  
+
+  + In the next screen on Apple’s website, upload the certificate you’ve just saved to disk. If you’re getting an “Invalid Certificate” error try removing all the expired certificates in your __Keychain__ and re-create the CSR from the previous step. Now you should have a certificate created – download and store it securely on your laptop (the file extension is __.cer__).
+  + Then, open the __.cer__ file (by double-clicking on it) and add it to your Keychain. Once in Keychain, right-click on the certificate and then choose “__Export__“. This will create a __.p12__ file for you (you can choose an encryption password as well for extra security)
+    
+    ![](/img/Screen-Shot-2019-01-28-at-8.58.03-PM.png)  
+
+   + In Firebase, locate your app and go to __Project Settings__ -> __Cloud Messaging__ tab  
+    
+    ![](/img/Screen-Shot-2019-01-28-at-9.03.26-PM-1024x190.png)  
+
+   + Locate the “__APNs Certificates__” section and upload the __.p12__ file you’ve generated previously. If you used a password, you also need to type it in the password field. You can use the same certificate __for both production and development__. 
+     
+     ![](/img/Screen-Shot-2019-01-28-at-9.06.44-PM.png)
+     After completing all these steps, including the ones in the previous section, push notifications will start working on iOS devices too. Make sure you rebuild and rerun your apps after the changes.
+

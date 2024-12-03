@@ -1,0 +1,100 @@
+# Authentication Module
+
+## Overview
+
+The Authentication module is a crucial component of our Flutter apps, handling user authentication and onboarding flows. It's located in `lib/<your-insta-flutter-app>/ui/auth/`.
+
+## Key Features
+
+- User onboarding (walkthrough)
+- Login and registration
+- Phone authentication with SMS verification
+- Social login integration
+- Firebase Implementation
+- Password reset functionality
+- Persistent login credentials
+
+## Main UI Components
+
+1. **OnBoarding (Walkthrough) Screens**
+   - File: `lib/<your-insta-flutter-app>/ui/auth/onBoarding/on_boarding_screen.dart`
+   - Purpose: Introduces new users to the app's key features
+
+2. **Welcome Screen**
+   - File: `lib/<your-insta-flutter-app>/ui/auth/welcome/welcome_screen.dart`
+   - Purpose: Entry point for authentication flows
+
+3. **Login Screen**
+   - File: `lib/<your-insta-flutter-app>/ui/auth/login/login_screen.dart`
+   - Supports:
+     - Email and password login
+     - Phone login with SMS verification
+     - Social login options
+
+4. **Sign Up Screen**
+   - File: `lib/<your-insta-flutter-app>/ui/auth/signUp/sign_up_screen.dart`
+   - Supports:
+     - Email and password registration
+     - Phone registration with SMS verification
+
+5. **Reset Password Screen**
+   - File: `lib/<your-insta-flutter-app>/ui/auth/resetPasswordScreen/reset_password_screen.dart`
+   - Handles password reset via email
+
+## Implementation Details
+
+### Authentication Repository
+
+The `AuthenticationRepository` class defines the contract for all authentication operations, including:
+
+- User retrieval
+- Email/password login
+- Social login (Facebook, Apple)
+- Phone authentication
+- User registration
+- Password reset
+- Logout
+
+:::tip
+
+A file named **`auth_custom_backend.dart`** is provided for you, located in `lib/<your-insta-flutter-app>/ui/auth/api/customBackend/auth_custom_backend.dart`. This file is designed for implementing authentication with a custom backend. If you choose to use your own backend system, you will need to complete the implementation in this file. We have already implemented authentication for Firebase, which can serve as a guide for how to structure your custom backend implementation.
+
+:::
+
+
+### Firebase Integration
+
+The `AuthFirebaseUtils` class implements the `AuthenticationRepository` interface using Firebase services. It handles:
+
+- Multi-provider authentication
+- User data management in Firestore
+- Profile image storage
+- Push notification token management
+
+### LauncherScreen
+
+The `LauncherScreen` is the app's entry point, determining the initial UI based on:
+
+- Persistent login credentials
+- Walkthrough impression status
+
+## Customization Guide
+
+To modify authentication flows or UI:
+
+1. Locate the relevant file in `lib/<your-insta-flutter-app>/ui/auth/`
+2. Make necessary changes to the UI components or logic
+3. (If you choose to implement your own custom backend) - Go to file **auth_api_manager.dart** inside `lib/<your-insta-flutter-app>/ui/auth/api/auth_api_manager.dart` and uncomment the line :
+```dart
+var authApiManager = AuthCustomBackendUtils();
+// var authApiManager = AuthFirebaseUtils(); - comment this line
+
+```
+4. Test thoroughly to ensure smooth user experience
+
+## Best Practices
+
+- Compress profile images before upload
+- Implement secure credential management
+- Handle authentication errors gracefully
+

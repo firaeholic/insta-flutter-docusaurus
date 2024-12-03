@@ -1,0 +1,74 @@
+# In-app Purchases  
+We have managed In-App purchases for iOS and Android with “in_app_purchase” library. This library enables us to manage In-App purchases smoothly for both Android and iOS.
+
+## Configuring IAPs For iOS on App Store Connect.
+To accept auto-renew subscriptions in ur app first, you have to log in to [App Store Connect](https://appstoreconnect.apple.com/login)  -> __Agreements, Tax and Banking__
+![](/img/1_i4TrleXTX-n-VzrVeLgTlQ.png)
+
+Then accept all the Paid Apps Agreements and you will see something like this:  
+
+![](/img/1_mUCqCuMdxrPItyLbKv8LPw.png)  
+
+If the agreements have not been accepted you can’t see the option to create the __AutoRenew__ subscription.
+
+## Create the subscriptions
+
++ Within App Store Connect, click __Apps__, followed by the App you wish to add in-app purchases to.
++ You should find __In-App Purchases__ at the left side of your page, amongst the tabs.
++ Under __In-App Purchases__, click __Manage__.
+Here, we can add subscriptions as well as a “billing grace period” feature that postpones ending a subscription until a certain period of time passes after a subscription expires.
+
+Click the __+__ icon next to your __In-App Purchases__ subheading to add an IAP, and follow the two-step process of choosing its type, followed by its name and reference number:  
+
+![](/img/1_Kx8Jhrfu2H7VN_qdlPQMzg.jpg)  
+
+Your __Reference Name__ should be a readable and easily recognizable label for the subscription item, whereas the __Product ID__ needs to be a unique identifier for the item.
+
+If you host many apps, using the com.org.app.iapId may be a more manageable Product ID convention, ensuring that there are no overlapping values between apps.
+
+From here you can jump into each of your purchase items and configure a range of metadata — here are some of the more interesting features you can configure:
+
+     + Subscription pricing, with a toggle to automatically generate prices for every supported currency. This is extremely useful for displaying prices in-app.
+     + Promotional offers and introductory offers to spur new customers. Specific start and end dates can be set (or even no end date for an ongoing promotion), as well as a specific payment type.
+Be sure to check out all the options available for your In-App Purchase item to further tailor your offer.
+
+Later on, we will fetch the configured IAPs further down and use in our project.
+
+## Configuring IAPs for Android on Google Play Console  
+
+![](/img/1_5AbK4gf2ULbV3wAAFEj7dg.png)  
+
+1. As described in the above screenshot, you need to __upload an APK__ and __set up a merchant account__ before creating an In-app product.
+2. If you’ve done it, you can create a managed product or subscribe products as shown in below screenshot  
+
+![](/img/1_Qg2nDWuzYzHblh4m8bSMzg.png)  
+
+## Flow Overview
+      + Using __"in_app_purchase”__ library, we fetch subscription details with the previously configured subscription __SKUs__ for different platforms.
+      + We display on the screen, the localized price and title of the subscription detail.
+      + The user selects a subscription plan and completes a purchase.
+      + The Subscription plan is immediately active and auto-renewable.
+      + To cancel a plan, The user will have to go to the phone App settings and log in to the services provider
+      + Select subscriptions and find the list of subscriptions available.
+## Codebase
+All the code related to In-App purchases lives in __lib/dating/ui/dating/upgradeAccount/upgrade_account.dart__:
+
+
+Let’s start off by adding every product ID to the array called **_kProductIds**, It should look similar to this:  
+
+![](/img/Screen-Shot-2021-05-06-at-7.44.58-AM.png)  
+
+__Note__: testing In App Purchases is not available for iOS simulators, You can test this on android emulator only.
+
+### UpgradeAccount.dart responsibilities:
+
+This is a component for display.
+Here, we have the UI for the subscription screen.
+It also starts a subscription purchase when we press the list tile in the UI.
+It manages the logic for checking and getting a available purchasable products
+
+
+
+
+
+

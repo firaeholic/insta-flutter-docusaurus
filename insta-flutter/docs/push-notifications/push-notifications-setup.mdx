@@ -1,0 +1,38 @@
+# Push Notifications Setup
+
+The app is using Google Cloud Messaging (within Firebase) to send push notifications to both iOS and Android devices.
+
+Push notifications are enabled by default in all of our Flutter templates. However, they are set up to work with our staging Firebase project, so you’ll need to switch to your own project, similar to how you’ve done it for Firestore.
+
+## Setting Up Push Notifications with Your Own Firebase   
+To set them up with your own Firebase, all you need to do is to replace the Server Key of the __lib/constants.dart__  file with your own.
+
+1. In __Firebase__, go to __Project Settings -> Cloud Messaging__ and copy the __Server Key__ to clipboard  
+
+[](/img/Screen-Shot-2020-03-12-at-11.39.44-AM-1024x337.png)  
+
+2. In the source code, go to lib/constants.dart  and replace the Server Key (SERVER_KEY constant) with your own:
+```mdx
+const SERVER_KEY = "YOUR_KEY_HERE";
+```
+Here’s an example of how the updated server key should look like:  
+
+![](/img/server_key.png)  
+
+That’s all you need to set up for Android. Push notifications should now work properly (make sure you re-build and re-run your app after making this change).
+
+## Code Documentation  
+The main component that handles sending push notifications is __chat_firebase.dart__, which resides at 
+`lib/core/ui/chat/api/firebase/chat_firebase.dart` or __contacts_firebase_helper__ residing at  `lib/<your-instaflutter-app>/ui/contacts/api/firebase/contacts_firebase_helper.dart`. All notifications are being sent through the __sendNotification__ function.
+```mdx 
+sendNotification(String token, String title, String body) async {}
+```
+To identify all the places that trigger push notifications, simply search for this method in the project.
+
+ ![](/img/fcm.png)  
+  
+ ## Next Steps  
+ 
+     + [Push Notifications on Android](/docs/push-notifications/push-notifications-on-android)  
+     + [Push Notifications on iOS](/docs/push-notifications/push-notifications-on-iOS) 
+

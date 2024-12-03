@@ -1,0 +1,56 @@
+# Chat
+Our chat module, which lives in `lib/core/ui/chat` contains the entire chatting functionality, including groups. Being properly modularized, the chat codebase can easily be integrated into any existing Flutter app, with only a few lines of code.
+
+The main components of the Chat module are:
+
+- `lib/core/ui/chat/chat/chat_screen.dart`
+  - This is the Flutter class that handles the core chat room and its functionality.
+  - It can be used for both 1-1 chat rooms as well as group chats.
+  - It depends on a **ChannelDataModel** object which contains necessary data that we depend on.
+  - It communicates with Firebase (its implementation being the class **ChatFireStoreUtils**), via the **ChatRepository** using its bloc - *ChatBloc*.
+  - The **sendMessage()** is one of the most important methods found in the **ChatFireStoreUtils** class which is in charge of sending a message and notifying recipients.
+  - For apps that have audio and video calling integration, the call is being initiated in this component too.
+  - It looks like this:
+
+<img
+  src={
+    require("../../static/img/Simulator-Screen-Shot-iPhone-11-Pro-2020-10-16-at-17.42.22.png")
+      .default
+  }
+  alt="Screenshot of the app"
+  style={{ width: "45%", height: "35%", display: "block", margin: "0 auto" }}
+/>
+
+- `lib/core/ui/chat/player_widget.dart`
+  - This Flutter widget is responsible for rendering audio messages player into the **chat_screen.dart**.
+
+- `lib/core/ui/chat/conversation/conversations_screen.dart`
+  - This Flutter widget continuously listens for new messages.
+  - It displays a horizontal list of current user friends.
+  - It displays a list of all the conversations of the current user.
+  - It depends on the **User** object.
+  - The top right icon can navigate to **create_group_screen.dart**.
+  - It uses methods *listenToConversations* and *fetchConversations* from **ChatFireStoreUtils** to display data using using its bloc - *ConversationBloc*.
+
+<img
+  src={
+    require("../../static/img/Simulator-Screen-Shot-iPhone-11-Pro-2020-10-16-at-17.17.38.png")
+      .default
+  }
+  alt="Screenshot of the app"
+  style={{ width: "45%", height: "35%", display: "block", margin: "0 auto" }}
+/>
+
+- `lib/core/ui/chat/create_group/create_group_screen.dart`
+  - This is the screen that lets you select multiple friends to create a group chat.
+  - It consumes methods from **ChatRepository** implementation to fetch the list of friends.
+  - It looks like this:
+
+<img
+  src={
+    require("../../static/img/Simulator-Screen-Shot-iPhone-11-Pro-Max-2020-05-19-at-11.15.59-768x1662.png")
+      .default
+  }
+  alt="Screenshot of the app"
+  style={{ width: "45%", height: "35%", display: "block", margin: "0 auto" }}
+/>

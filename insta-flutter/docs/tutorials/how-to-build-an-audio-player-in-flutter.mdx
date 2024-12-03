@@ -1,0 +1,638 @@
+import Note from "@theme/Admonition";
+import Admonition from "@theme/Admonition";
+
+# How to Build an Audio Player in Flutter
+In today’s applications, audio recording is a common function that is often utilized. Recording audio has become an integral part of modern life, from programs that enable users to record and take notes during meetings or lectures, learn a new language, make podcasts, and more. It’s equally as crucial to have an audio-playing function. Music applications, podcasts, games, and alerts are all examples of how this technology is being leveraged to alter how we engage with our favorite apps on the go. 
+
+<Admonition type="info" title="Overview" icon="💡">
+Adding audio recording and playback functionality to a Flutter app is covered in this article so you may design your own audio-based contemporary applications.
+
+Make sure you have the following before proceeding with the tutorial:
+- Flutter is set up
+- Xcode or Android Studio must be installed on your computer.
+</Admonition>
+
+## Initial Setup and Configuration
+
+### Creating the flutter app
+Begin by creating a new Flutter application. 
+
+```bash
+flutter create app_name
+```
+
+`Flutter sound` and `audio players` are the tools we’ll be using to record and playback audio in this tutorial. Navigate to main.dart in the freshly generated Flutter app in your favorite code editor. Setting debugShowCheckedModeBanner to false will disable the debug mode banner.
+```dart
+return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+``` 
+This class, MyHomePageState, will house all of our functionality. Set the page’s background color to Colors.black87 in its construction procedure. This results in a black backdrop with 87 percent opacity on our website. We can also give our AppBar a name:
+```dart
+backgroundColor: Colors.black87,
+appBar: AppBar(title: Text('Audio Recording and Playing')),
+```
+
+### Making the Flutter audio app more user-friendly
+It is common for recorders to feature built-in timers that read for the duration of the audio recording. The timer functionality may be added to our app by adding a Container widget to the app’s body. The recording timer will be shown in a Text widget that is a child of this one. In TextStyle, we’ll style the timer text as well:
+```dart
+body: Center(
+  child: Column(
+    mainAxisAlignment: MainAxisAlignment.start,
+    children: <Widget>[
+      const SizedBox(height: 40),
+      Center(
+        child: Text(
+          _timerText,
+          style: const TextStyle(fontSize: 70, color: Colors.red),
+        ),
+      ),
+    ],
+  ),
+)
+```            
+**Here, _timerText will receive the timer through a function that we’ll write as we go along.**
+
+
+## Starting and Stopping Recording
+
+After that, we'll add buttons to control recording. We'll create a reusable button widget with common styling:
+
+```dart
+ ElevatedButton createElevatedButton(
+      {IconData icon, Color iconColor, Function onPressFunc}) {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        padding: EdgeInsets.all(6.0),
+        side: BorderSide(
+          color: Colors.red,
+          width: 4.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        primary: Colors.white,
+        elevation: 9.0,
+      ),
+      onPressed: onPressFunc,
+      icon: Icon(
+        icon,
+        color: iconColor,
+        size: 38.0,
+      ),
+      label: Text(''),
+    );
+  }
+```
+This widget has three key attributes: the icon, the icon’s color, and its onPress action. It features a red 4px border, 6px padding, a 15px border-radius, white color, and a shadow elevation of 9. The icon size is 38px with the specified iconColor. The `createElevatedButton` widget is used for startRecording and stopRecording buttons, with respective icons and actions: startRecording and stopRecording.
+```dart
+Row(
+  mainAxisAlignment: MainAxisAlignment.center,
+  children: <Widget>[
+    createElevatedButton(
+      icon: _isRecording ? Icons.stop : Icons.mic,
+      iconColor: Colors.red,
+      onPressFunc: () {
+        if (_isRecording) {
+          stopRecording();
+        } else {
+          startRecording();
+        }
+      },
+    ),
+    const SizedBox(width: 30),
+    createElevatedButton(
+      icon: Icons.stop,
+      iconColor: Colors.red,
+      onPressFunc: stopRecording,
+    ),
+  ],
+)
+```          
+
+## Playing the recorded audio
+
+We need a playback button to play and stop recorded audio. A boolean named _playAudio is used to toggle between playing and stopping the audio.
+
+Next, an ElevatedButton whose onPressed method will use setState to switch the boolean’s value, calling either playFunc or stopPlayFunc. The button’s icon and label will switch between a play icon with "Play" text and a stop icon with "Stop" text, depending on whether the audio is playing.
+```dart
+ElevatedButton.icon(
+  style: ElevatedButton.styleFrom(
+    elevation: 9.0,
+    backgroundColor: Colors.red
+  ),
+  onPressed: _recordedFilePath == null ? null : () {
+    setState(() {
+      _playAudio = !_playAudio;
+    });
+    if (_playAudio) playFunc();
+    if (!_playAudio) stopPlayFunc();
+  },
+  icon: _playAudio
+      ? const Icon(Icons.stop)
+      : const Icon(Icons.play_arrow),
+  label: _playAudio
+      ? const Text(
+          "Stop",
+          style: TextStyle(fontSize: 28),
+        )
+      : const Text(
+          "Play",
+          style: TextStyle(fontSize: 28),
+        ),
+)
+``` 
+The playFunc function is called if the current value is false, indicating that audio is not presently playing. StopPlayFunc is called if the value is true, which indicates that audio is presently playing and the button is pushed; we’ll write these two functions below. It is important that we show a stop symbol on the button that reads “stop” while the audio is playing. A play icon and “play” text will appear on the button when the audio is no longer playing.
+
+## Installing packages for the Flutter audio app
+
+The next step is to set up our app’s audio recording and playback functionality by installing the necessary packages. Add them to the dependencies section of the pubspec.yaml file.
+```yaml
+dependencies:
+  audioplayers: 6.1.0
+  flutter_sound: 9.16.3
+  intl: 0.19.0
+  permission_handler: 11.3.1
+  path: 1.9.1
+  cupertino_icons: 1.0.8
+  path_provider: 2.1.4
+
+```
+Now, we can go to our main.dart file and import the packages to use in our app:
+
+```dart
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:assets_audio_player/assets_audio_player.dart';
+```
+The first step is to create an instance of each:
+```dart
+  FlutterSoundRecorder _recordingSession;
+  final recordingPlayer = AssetsAudioPlayer();
+```
+First, let's declare our necessary variables:
+```dart
+late FlutterSoundRecorder _recordingSession;
+late FlutterSoundPlayer _recordingPlayer;
+String? _recordingPath;
+String _timerText = '00:00:00';
+bool _isRecording = false;
+bool _isPlaying = false;
+```
+
+## Creating functions for the Flutter audio app
+### Initializing the app
+
+To initialize our app upon loading, we can create a function called initializer:
+
+```dart
+Future<void> initializer() async {
+  _recordingSession = FlutterSoundRecorder();
+  _recordingPlayer = FlutterSoundPlayer();
+  
+  final dir = await getApplicationDocumentsDirectory();
+  _recordingPath = '${dir.path}/recording.wav';
+  
+  await _recordingSession.openRecorder();
+  await _recordingPlayer.openPlayer();
+  await initializeDateFormatting();
+  
+  await Permission.microphone.request();
+  await Permission.storage.request();
+}
+```
+
+To record audio, start by creating an instance of FlutterSoundRecorder with openAudioSession, setting audio focus with specific parameters. Ensure no other apps on the phone are using the microphone or playing audio to avoid conflicts. Track and update subscription duration with setSubscriptionDuration. Request permissions for microphone and storage using Permission.microphone.request, Permission.storage.request, and Permission.manageExternalStorage. Lastly, use initializeDateFormatting to format the timer text.
+
+The next step is to include an initializer method in your initState function. This is accomplished by:
+```dart
+  void initState() {
+    super.initState();
+    initializer();
+  }
+```
+Managing user rights on Android mobile devices
+
+To provide these rights to our app, further configuration is necessary on Android phones. Navigate to the following and add permissions for recording audio, and storing files to the external storage: `android/app/src/main/AndroidManifest.xml`
+To access the storage of phones with Android 10 or API level 29, we must set the value of requestLegacyExternalStorage to true:
+```xml
+ <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name=
+    "android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name=
+    "android.permission.WRITE_EXTERNAL_STORAGE" />
+   <application android:requestLegacyExternalStorage="true"
+``` 
+
+### Adding the startRecording() function
+
+We can proceed to create the functions we added to our buttons; the first function is startRecording():
+```dart
+Future<void> startRecording() async {
+  try {
+    if (_recordingPath != null) {
+      await _recordingSession.startRecorder(
+        toFile: _recordingPath,
+        codec: Codec.pcm16WAV,
+      );
+      
+      _recordingSession.onProgress!.listen((event) {
+        final date = DateTime.fromMillisecondsSinceEpoch(
+          event.duration.inMilliseconds,
+          isUtc: true);
+        final txt = DateFormat('mm:ss:SS').format(date);
+        
+        setState(() {
+          _timerText = txt.substring(0, 8);
+          _isRecording = true;
+        });
+      });
+    }
+  } catch (e) {
+    print('Error recording: $e');
+  }
+}
+```
+In the startRecording function, we first check if we have a valid recording path. We then use the startRecorder method to begin recording, specifying both the file path where the audio will be saved and the codec format (PCM 16-bit WAV in this case). The function also implements error handling using try-catch to ensure robust operation.
+
+### Adding the stopRecording function
+
+Next, we’ll create the stopRecording function:
+```dart
+Future<void> stopRecording() async {
+  try {
+    await _recordingSession.stopRecorder();
+    setState(() {
+      _isRecording = false;
+      _timerText = '00:00:00';
+    });
+  } catch (e) {
+    print('Error stopping recording: $e');
+  }
+}
+```
+The stopRecording function handles the termination of the recording process. It calls the stopRecorder method to end the recording session and releases the associated resources. We also update the UI state to reflect that recording has stopped and reset the timer display.
+### Adding the play function
+
+Next, we’ll create the play function:
+```dart
+Future<void> playFunc() async {
+  try {
+    if (_recordingPath != null) {
+      await _recordingPlayer.startPlayer(
+        fromURI: _recordingPath,
+        codec: Codec.pcm16WAV,
+      );
+      setState(() {
+        _isPlaying = true;
+      });
+    }
+  } catch (e) {
+    print('Error playing audio: $e');
+  }
+}
+```
+The playFunc method initiates audio playback using the startPlayer method. It takes the URI of our recorded audio file and the appropriate codec as parameters. When called, it begins playing the recorded audio and updates the UI to show the playing state. Error handling is implemented to manage any playback issues that might occur.
+### Adding the stopPlay function
+
+Lastly, we’ll create the stopPlay function, inside of which we add the stop method to stop the player:
+```dart
+Future<void> stopPlayFunc() async {
+  try {
+    await _recordingPlayer.stopPlayer();
+    setState(() {
+      _isPlaying = false;
+    });
+  } catch (e) {
+    print('Error stopping playback: $e');
+  }
+}
+```
+
+## Conclusion
+And with that, we have a finalized simple audio recorder and player application:
+<img
+  src={
+    require("../../static/img/Screen_recording_20241028_152557.gif")
+      .default
+  }
+  alt="Screenshot of the app"
+  style={{ width: "35%", height: "25%", display: "block", margin: "0 auto" }}
+/>
+
+
+Below is the final code for everything we just built. Happy coding!
+
+
+<details>
+<summary><b>`main.dart`</b></summary>
+```dart
+import 'dart:async';
+import 'package:flutter/material.dart';
+import 'package:flutter_sound/flutter_sound.dart';
+import 'package:intl/date_symbol_data_local.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:audioplayers/audioplayers.dart';
+import 'package:intl/intl.dart' show DateFormat;
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      debugShowCheckedModeBanner: false,
+      title: 'Flutter Demo',
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+      ),
+      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+    );
+  }
+}
+
+class MyHomePage extends StatefulWidget {
+  final String title;
+
+  const MyHomePage({super.key, required this.title});
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  late FlutterSoundRecorder _recordingSession;
+  final AudioPlayer audioPlayer = AudioPlayer();
+  String? _recordedFilePath;
+  bool _playAudio = false;
+  String _timerText = '00:00:00';
+  StreamSubscription? _recorderSubscription;
+  bool _isRecording = false;
+
+  @override
+  void initState() {
+    super.initState();
+    initializer();
+  }
+
+  @override
+  void dispose() {
+    _recorderSubscription?.cancel();
+    _recordingSession.closeRecorder();
+    audioPlayer.dispose();
+    super.dispose();
+  }
+
+  void initializer() async {
+    _recordingSession = FlutterSoundRecorder();
+    await _recordingSession.openRecorder();
+    await _recordingSession.setSubscriptionDuration(const Duration(milliseconds: 10));
+    await initializeDateFormatting();
+    await [Permission.microphone, Permission.storage].request();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black87,
+      appBar: AppBar(title: const Text('Audio Recording and Playing')),
+      body: Center(
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: <Widget>[
+            const SizedBox(height: 40),
+            Center(
+              child: Text(
+                _timerText,
+                style: const TextStyle(fontSize: 70, color: Colors.red),
+              ),
+            ),
+            const SizedBox(height: 20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                createElevatedButton(
+                  icon: _isRecording ? Icons.stop : Icons.mic,
+                  iconColor: Colors.red,
+                  onPressFunc: () {
+                    if (_isRecording) {
+                      stopRecording();
+                    } else {
+                      startRecording();
+                    }
+                  },
+                ),
+                const SizedBox(width: 30),
+                createElevatedButton(
+                  icon: Icons.stop,
+                  iconColor: Colors.red,
+                  onPressFunc: stopRecording,
+                ),
+              ],
+            ),
+            const SizedBox(height: 20),
+            ElevatedButton.icon(
+              style: ElevatedButton.styleFrom(
+                  elevation: 9.0, backgroundColor: Colors.red),
+              onPressed: _recordedFilePath == null ? null : () {
+                setState(() {
+                  _playAudio = !_playAudio;
+                });
+                if (_playAudio) playFunc();
+                if (!_playAudio) stopPlayFunc();
+              },
+              icon: _playAudio
+                  ? const Icon(Icons.stop)
+                  : const Icon(Icons.play_arrow),
+              label: _playAudio
+                  ? const Text(
+                "Stop",
+                style: TextStyle(fontSize: 28),
+              )
+                  : const Text(
+                "Play",
+                style: TextStyle(fontSize: 28),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  ElevatedButton createElevatedButton({
+    required IconData icon,
+    required Color iconColor,
+    required VoidCallback? onPressFunc,
+  }) {
+    return ElevatedButton.icon(
+      style: ElevatedButton.styleFrom(
+        padding: const EdgeInsets.all(6.0),
+        side: const BorderSide(
+          color: Colors.red,
+          width: 4.0,
+        ),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(20),
+        ),
+        backgroundColor: Colors.white,
+        elevation: 9.0,
+      ),
+      onPressed: onPressFunc,
+      icon: Icon(
+        icon,
+        color: iconColor,
+        size: 38.0,
+      ),
+      label: const Text(''),
+    );
+  }
+
+  Future<void> startRecording() async {
+    try {
+      var appDir = await getApplicationDocumentsDirectory();
+      var fileName = 'recording_${DateTime.now().millisecondsSinceEpoch}.aac';
+      String path = '${appDir.path}/$fileName';
+
+      await _recordingSession.startRecorder(
+        toFile: path,
+        codec: Codec.aacMP4,
+      );
+
+      setState(() {
+        _isRecording = true;
+      });
+
+      _recorderSubscription?.cancel();
+      _recorderSubscription = _recordingSession.onProgress?.listen((e) {
+        var date = DateTime.fromMillisecondsSinceEpoch(e.duration.inMilliseconds,
+            isUtc: true);
+        var timeText = DateFormat('mm:ss:SS', 'en_GB').format(date);
+        setState(() {
+          _timerText = timeText.substring(0, 8);
+        });
+      });
+    } catch (e) {
+      print('Error starting recording: $e');
+    }
+  }
+
+  Future<void> stopRecording() async {
+    try {
+      _recordedFilePath = await _recordingSession.stopRecorder();
+      _recorderSubscription?.cancel();
+      setState(() {
+        _isRecording = false;
+        _timerText = '00:00:00';
+      });
+    } catch (e) {
+      print('Error stopping recording: $e');
+    }
+  }
+
+  Future<void> playFunc() async {
+    if (_recordedFilePath != null) {
+      try {
+        await audioPlayer.play(DeviceFileSource(_recordedFilePath!));
+      } catch (e) {
+        print('Error playing audio: $e');
+      }
+    }
+  }
+
+  Future<void> stopPlayFunc() async {
+    try {
+      await audioPlayer.stop();
+    } catch (e) {
+      print('Error stopping playback: $e');
+    }
+  }
+}
+```
+</details>
+
+
+<details>
+<summary><b>Android Manifest - `AndroidManifest.xml`</b></summary>
+
+```xml
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <application
+        android:label="music_app_demo"
+        android:name="${applicationName}"
+        android:requestLegacyExternalStorage="true"
+        android:icon="@mipmap/ic_launcher"
+        tools:replace="android:label, android:icon">
+        <activity
+            android:name=".MainActivity"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:taskAffinity=""
+            android:theme="@style/LaunchTheme"
+            android:configChanges="orientation|keyboardHidden|keyboard|screenSize|smallestScreenSize|locale|layoutDirection|fontScale|screenLayout|density|uiMode"
+            android:hardwareAccelerated="true"
+            android:windowSoftInputMode="adjustResize">
+            <!-- Specifies an Android theme to apply to this Activity as soon as
+                 the Android process has started. This theme is visible to the user
+                 while the Flutter UI initializes. After that, this theme continues
+                 to determine the Window background behind the Flutter UI. -->
+            <meta-data
+                android:name="io.flutter.embedding.android.NormalTheme"
+                android:resource="@style/NormalTheme" />
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+        <!-- Don't delete the meta-data below.
+             This is used by the Flutter tool to generate GeneratedPluginRegistrant.java -->
+        <meta-data
+            android:name="flutterEmbedding"
+            android:value="2" />
+    </application>
+    <!-- Required to query activities that can process text, see:
+         https://developer.android.com/training/package-visibility and
+         https://developer.android.com/reference/android/content/Intent#ACTION_PROCESS_TEXT.
+         In particular, this is used by the Flutter engine in io.flutter.plugin.text.ProcessTextPlugin. -->
+    <queries>
+        <intent>
+            <action android:name="android.intent.action.PROCESS_TEXT"/>
+            <data android:mimeType="text/plain"/>
+        </intent>
+    </queries>
+</manifest>
+
+```
+
+</details>
+<details>
+
+<summary><b>Pubspec - `pubspec.yaml`</b></summary>
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: 1.0.8 
+  flutter_sound: 9.16.3
+  permission_handler: 11.3.1 
+  path: 1.9.0
+  assets_audio_player: 3.1.1 
+  intl: 0.19.0
+```
+
+</details>
+

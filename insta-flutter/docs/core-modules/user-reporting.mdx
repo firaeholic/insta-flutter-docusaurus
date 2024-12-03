@@ -1,0 +1,77 @@
+# User Reporting 
+
+User reporting and blocking are essential features required by both Apple and Google for mobile applications where users can create and share content. This functionality is crucial for:
+
+- Messaging apps
+- Dating platforms
+- Social networks
+- Marketplace applications
+- Photo sharing services
+
+Our implementation resides in `lib/core/utils/user_report/api/firebase/user_reporting_firebase_helper.dart`, serving as a central helper class for Firebase operations related to user reporting.
+
+## Key Components
+
+#### 1. UserReportingFireStoreUtils Class
+
+This class extends `UserReportRepository` and implements the core functionality for user reporting and blocking.
+
+**Main Methods**:
+
+- `markAbuse()`
+  - Purpose: Report or block a target user
+  - Parameters:
+    - `destUserID`: ID of the user being reported/blocked
+    - `abuseType`: Type of abuse (e.g., 'report' or 'block')
+    - `sourceUserID`: ID of the user initiating the action
+  - Returns: `Future<bool>` indicating success or failure
+
+- `unblockUser()`
+  - Purpose: Unblock a previously blocked user
+  - Parameters:
+    - `destUserID`: ID of the user to unblock
+    - `sourceUserID`: ID of the user initiating the unblock
+  - Returns: `Future<bool>` indicating success or failure
+
+- `fetchBlockedUsers()` (Not implemented)
+  - Purpose: Retrieves the blocked/reported users from the “user_reports” table
+  - Parameters:
+    - `userID`: ID of the current user
+    - `page`: Page number for pagination
+    - `size`: Number of items per page
+  - Returns: `Future<List<User>>`
+
+#### 2. UserReportRepository Abstract Class
+
+This abstract class defines the interface for user reporting functionality, ensuring consistency across different implementations.
+
+#### 3. Constants
+
+- `blockUserAction = 'block'`
+- `reportUserAction = 'report'`
+
+These constants are used to specify the type of action when calling `markAbuse()`.
+
+## Firebase Implementation
+
+By default, the app uses Firebase for storing user reports:
+
+- Firestore table: `user_reports`
+- This table is automatically created upon the first user report
+
+## Customizing Backend
+
+Your project already includes a `UserReportingCustomBackend` class that extends `UserReportRepository`. To use a custom backend instead of Firebase, follow these steps:
+
+1. Implement the methods in `UserReportingCustomBackend`:
+
+   Open `lib/core/utils/user_report/api/custom_backend/user_reporting_custom_backend.dart`. This file is intended for implementing your own backend system. While we have provided an implementation for Firebase (*UserReportingFireStoreUtils*), you can refer to it as a guide for developing your custom backend solution.
+
+2. Update `lib/core/utils/user_report/api/api_manager.dart`:
+
+```dart
+var userReportingApiManager = UserReportingCustomBackend();
+
+// var userReportingApiManager = UserReportingFireStoreUtils(); - comment this line
+
+```
