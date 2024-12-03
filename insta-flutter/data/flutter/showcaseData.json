@@ -1,0 +1,23 @@
+{
+  "title": "What's Included in This Black Friday Deal?",
+  "subtitle": "Access all our premium Flutter templates for a single payment.",
+  "templates": [
+    {
+      "image": "https://instaflutter.com/wp-content/uploads/2019/02/flutter-ecommerce-app-600x450.png",
+      "title": "E-Commerce App",
+      "description": "Launch your online store in days with this robust template."
+    },
+    {
+      "image": "https://instaflutter.com/wp-content/uploads/2020/10/flutter-social-network-template-1-600x450.png",
+      "title": "Social Media App",
+      "description": "Build the next big social network easily and quickly."
+    },
+    {
+      "image": "https://instaflutter.com/wp-content/uploads/2020/08/universal-listings-flutter-app-template-600x450.png",
+      "title": "Food Delivery App",
+      "description": "A complete solution for your food delivery business."
+    }
+  ],
+  "ctaText": "Claim All Templates for $649",
+  "ctaLink": "#pricing"
+}

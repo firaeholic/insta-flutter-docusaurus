@@ -1,0 +1,93 @@
+{
+  "style": "dark",
+  "links": [
+    {
+      "title": "About Us",
+      "items": [
+        {
+          "html": "Our mission at Instaflutter is to provide beautiful Flutter app templates, Flutter starter kits and Flutter freebies to help mobile developers jump straight into the action rather than reinventing the wheel by rewriting boring boilerplate code that every app needs.<br/><br/>\nOur high-quality Flutter templates reflect our core values that consist of beautiful designs, highly-modularized code, and bug-free apps and top-notch user experience.<br/><br/>\nOur founding team has product, design and development experience in top-tier companies such as Instagram and Twitter."
+        }
+      ]
+    },
+    {
+      "title": "Instaflutter",
+      "items": [
+        {
+          "label": "Blog",
+          "to": "https://instaflutter.com/blog/"
+        },
+        {
+          "label": "Contact Us",
+          "to": "https://instaflutter.com/contact-us/"
+        },
+        {
+          "label": "Licenses",
+          "to": "https://instaflutter.com/licenses/"
+        },
+        {
+          "label": "Affiliate Program",
+          "to": "https://instaflutter.com/affiliates"
+        },
+        {
+          "label": "Privacy Policy",
+          "to": "https://instaflutter.com/privacy/"
+        },
+        {
+          "label": "Refund Policy",
+          "to": "https://instaflutter.com/refunds/"
+        },
+        {
+          "label": "Terms of Service",
+          "to": "https://instaflutter.com/terms-of-service/"
+        }
+      ]
+    },
+    {
+      "title": "Find us on",
+      "items": [
+        {
+          "label": "GitHub",
+          "href": "https://github.com/instaflutter"
+        },
+        {
+          "label": "Facebook",
+          "href": "https://www.facebook.com/instamobileio/"
+        },
+        {
+          "label": "Twitter",
+          "href": "https://twitter.com/instamobileio"
+        },
+        {
+          "label": "Dribbble",
+          "href": "https://dribbble.com/iosapptemplates"
+        }
+      ]
+    },
+    {
+      "title": "Resources",
+      "items": [
+        {
+          "label": "iOS App Templates",
+          "href": "https://iosapptemplates.com/"
+        },
+        {
+          "label": "React Native Templates",
+          "href": "https://instamobile.io/"
+        },
+        {
+          "label": "Flutter Docs",
+          "href": "https://instaflutter.com/docs"
+        },
+        {
+          "label": "Dart Programming",
+          "href": "https://www.dartlang.org/guides/get-started"
+        },
+        {
+          "label": "Flutter Freebies",
+          "href": "https://github.com/instaflutter"
+        }
+      ]
+    }
+  ],
+  "company": "Instaflutter"
+}

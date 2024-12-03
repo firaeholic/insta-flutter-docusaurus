@@ -1,0 +1,37 @@
+{
+  "title": "Exclusive Black Friday Pricing",
+  "pricingOptions": [
+    {
+      "planName": "Developer License",
+      "price": "$449",
+      "originalPrice": "$6,689",
+      "description": [
+        "18+ premium templates included.",
+        "1 app per product.",
+        "1 team member included.",
+        "Perfect for solo developers."
+      ],
+      "offerLabel": "Best Deal!",
+      "buttonLabel": "Buy Now - just $449",
+      "buttonLink": "#",
+      "isBestValue": true,
+      "paddleProductId": "pri_01jdd6m7haparqdcthmdsqx6w1"
+    },
+    {
+      "planName": "Team License",
+      "price": "$649",
+      "originalPrice": null,
+      "description": [
+        "18+ premium templates included.",
+        "Unlimited apps for your business.",
+        "Unlimited team members for larger teams.",
+        "Perfect for larger teams or agencies."
+      ],
+      "offerLabel": "For Larger Teams",
+      "buttonLabel": "Buy Now - just $649",
+      "buttonLink": "#",
+      "isBestValue": false,
+      "paddleProductId": "pri_01jdd6n20r1wxg1ys75p3kzq7k"
+    }
+  ]
+}

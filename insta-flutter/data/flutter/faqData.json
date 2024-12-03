@@ -1,0 +1,57 @@
+{
+  "title": "Frequently Asked Questions",
+  "questions": [
+    {
+      "question": "Is this a one-time payment?",
+      "answer": "Yes, it's a one-time payment. We offer two licenses: Developer License at $449 and Team License at $649. Both provide lifetime access to all our templates. The Team License is available only during the Black Friday campaign."
+    },
+    {
+      "question": "What is the difference between the Developer License and the Team License?",
+      "answer": "The Developer License is intended for individual developers and allows one published app per template. The Team License is for teams and allows unlimited published apps. Please note that the Team License is exclusively available during our Black Friday campaign and cannot be purchased afterward."
+    },
+    {
+      "question": "Can I use the templates for multiple projects?",
+      "answer": "With the Developer License, you can publish one app per template. With the Team License, you can use the templates for unlimited personal and commercial projects and publish unlimited apps."
+    },
+    {
+      "question": "What does the Mega Bundle include?",
+      "answer": "The Mega Bundle gives you access to all our Flutter templates, including front-end built with Flutter and back-end integrations using Firebase Functions and Firestore."
+    },
+    {
+      "question": "What technologies are used in your templates?",
+      "answer": "Our templates are built using the latest technologies, including Flutter 3.24.*, Firebase 9.0.*, and Dart 3.5.*. This ensures compatibility and optimal performance with current development standards."
+    },
+    {
+      "question": "Do you provide updates for the templates?",
+      "answer": "Yes, we regularly update our templates to ensure they remain compatible with the latest stable versions of Flutter and Firebase."
+    },
+    {
+      "question": "Do you offer support?",
+      "answer": "Yes, we offer email support to all our customers. If you have any questions or need assistance, our team is here to help."
+    },
+    {
+      "question": "Do you provide documentation and tutorials?",
+      "answer": "Absolutely! We provide extensive documentation and a comprehensive list of tutorials to help you get started with our apps and make the most out of them."
+    },
+    {
+      "question": "Can I get a refund if I'm not satisfied?",
+      "answer": "Due to the nature of our Mega Bundle offering, all sales are final, and we do not offer refunds. If you have any issues, please contact our support team, and we'll be happy to assist you."
+    },
+    {
+      "question": "Can I resell the templates or use them to create my own templates?",
+      "answer": "No, you are not allowed to resell our templates or use them to create competing products on marketplaces. The licenses allow you to use the templates to develop and publish your own apps, but not to redistribute or sell the templates themselves."
+    },
+    {
+      "question": "Will I get lifetime access to all apps?",
+      "answer": "Yes, purchasing either license grants you lifetime access to all our current and future Flutter templates."
+    },
+    {
+      "question": "Do your apps include both front-end and back-end?",
+      "answer": "Yes, our apps include front-end built with Flutter and back-end integrations using Firebase Functions and Firestore databases."
+    },
+    {
+      "question": "How often do you update the apps?",
+      "answer": "We update our apps regularly to support the latest stable versions of Flutter, Firebase, and Dart, ensuring you always have access to the most recent features and improvements."
+    }
+  ]
+}

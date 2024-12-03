@@ -1,0 +1,23 @@
+{
+  "title": "Why This Black Friday Deal is Unbeatable",
+  "comparison": [
+    {
+      "item": "Individual Template Cost",
+      "items_included": "18+",
+      "description": "Each template costs $369.",
+      "price": "$369"
+    },
+    {
+      "item": "Bundle Value",
+      "items_included": "20+",
+      "description": "20+ templates included in the bundle.",
+      "price": "$6,689"
+    },
+    {
+      "item": "Black Friday Bundle Price",
+      "description": "Access everything for a single payment.",
+      "price": "$449"
+    }
+  ],
+  "totalSavings": "$6,230+"
+}
