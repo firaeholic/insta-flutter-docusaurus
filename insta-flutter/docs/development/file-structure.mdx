@@ -1,0 +1,182 @@
+# File structure 
+
+The general file structure of our Flutter templates is as follows:
+
+<div className="bg-gray-100 dark:bg-gray-700 rounded-lg text-sm">
+  <pre className="whitespace-pre">
+root
+├── android
+├── ios
+├── lib
+│   ├── core
+│   │   ├── model
+│   │   │   ├── user.dart
+│   │   │   ├── contact_model.dart
+│   │   │   ├── ... (other core models)
+│   │   ├── ui
+│   │   │   ├── av_chat
+│   │   │   │   ├── video_call
+│   │   │   │   │   ├── video_call_screen.dart 
+│   │   │   │   │   ├── video_call_handler.dart 
+│   │   │   │   ├── voice_call
+│   │   │   │   │   ├── voice_call_screen.dart 
+│   │   │   │   │   ├── voice_call_handler.dart 
+│   │   │   │   ├── ... (other audio-video chat sub modules)
+│   │   │   ├── chat
+│   │   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   │   ├── chat <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── conversation <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── create_group <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── player_widget.dart
+│   │   │   │   ├── friend_widget.dart
+│   │   │   │   ├── group_conversation_tile.dart
+│   │   │   ├── full_screen_image_viewer
+│   │   │   │   ├── full_screen_image_viewer.dart
+│   │   │   ├── full_screen_video_viewer
+│   │   │   │   ├── full_screen_video_viewer.dart
+│   │   │   ├── loading <span className="inline-block w-2 h-2 rounded-full bg-green-500 ml-1"></span>
+│   │   ├── utils
+│   │   │   ├── user_report
+│   │   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   ├── ads
+│   │   │   │   ├── ads_utils.dart
+│   │   │   ├── social_comments
+│   │   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   │   ├── comments <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   ├── helper.dart
+│   ├── &lt;your-insta-flutter-app&gt;
+│   │   ├── model
+│   │   │   ├── ...&lt;app-specific-models&gt;.dart
+│   │   ├── ui
+│   │   │   ├── auth
+│   │   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   │   ├── launcher
+│   │   │   │   │   ├── launcher_screen.dart 
+│   │   │   │   ├── phone_auth
+│   │   │   │   │   ├── code_input.dart <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   │   ├── number_input.dart <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── login <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── onboarding <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── ..(other auth blocs)
+│   │   │   ├── contacts
+│   │   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   │   ├── discover_people <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   ├── container <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   ├── profile
+│   │   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   │   ├── account_details <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   │   ├── settings <span className="inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+│   │   │   ├── noftifications
+│   │   │   ├── data
+│   │   │   │   ├── data_source.dart
+│   │   │   ├── ui_kit.dart
+│   │   ├── &lt;your-flutter-app&gt;_module
+│   │   │   ├── api <span className="inline-block w-2 h-2 rounded-full bg-blue-500 ml-1"></span>
+│   │   │   ├── ...(other-app-specific-screens-and-blocs)
+│   │   ├── services
+│   │   │   ├── local_database.dart
+│   │   │   ├── local_database.g.dart
+│   │   ├── &lt;your-intaflutter-app&gt;_app_config.dart
+│   │   ├── main.dart // app-specific main.dart file
+│   ├── main.dart // generic main.dart file
+└────── constants.dart
+  </pre>
+</div>
+
+<div class="mt-5 bg-gray-100 dark:bg-gray-700 rounded-lg p-4">
+  <h3 class="text-lg font-semibold mb-2 text-gray-800 dark:text-white">Color Key:</h3>
+  <ul class="space-y-2">
+    <li class="flex items-center">
+      <span class="inline-block w-3 h-3 rounded-full bg-red-500 mr-2"></span>
+      <span class="text-gray-700 dark:text-gray-300">BLoC structure</span>
+    </li>
+    <li class="flex items-center">
+      <span class="inline-block w-3 h-3 rounded-full bg-blue-500 mr-2"></span>
+      <span class="text-gray-700 dark:text-gray-300">API Template</span>
+    </li>
+    <li class="flex items-center">
+      <span class="inline-block w-3 h-3 rounded-full bg-green-500 mr-2"></span>
+      <span class="text-gray-700 dark:text-gray-300">Cubit</span>
+    </li>
+  </ul>
+
+  <div class="mt-8 grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-16 h-16 bg-red-500 rounded-bl-full"></div>
+      <svg class="w-6 h-6 text-white absolute top-2 right-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+      <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center">
+        <svg class="w-6 h-6 mr-2 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path></svg>
+        <span class="ml-1">BLoC Structure</span>
+      </h3>
+      <h6> Every directory labeled red follows the BLoC pattern, where each of them consist of the below files </h6>
+    ```mdx
+bloc_module/
+├──<module>_screen.dart
+├──<module>_event.dart
+├──<module>_state.dart
+└──<module>_bloc.dart
+    ```
+      <div class="mt-4 bg-red-100 dark:bg-red-900 rounded p-4">
+        <h4 class="font-semibold text-red-800 dark:text-red-200 flex items-center">
+          <svg class="w-6 h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+          <span>Important Note:</span>
+        </h4>
+        <p class="text-red-700 dark:text-red-300 mt-2 leading-relaxed">
+          The BLoC pattern separates the presentation layer from the business logic:
+        </p>
+        
+          - `_bloc.dart:` Contains the main business logic
+          - `_event.dart:` Defines the events
+          - `_state.dart:` Manages the states
+          - `_screen.dart:` Handles the UI
+      
+      </div>
+    </div>
+    <div class="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 relative overflow-hidden">
+      <div class="absolute top-0 right-0 w-16 h-16 bg-blue-500 rounded-bl-full"></div>
+      <svg class="w-6 h-6 text-white absolute top-2 right-2" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 20l4-16m4 4l4 4-4 4M6 16l-4-4 4-4"></path></svg>
+      <h3 class="text-xl font-semibold mb-4 text-gray-800 dark:text-white flex items-center">
+        <svg class="w-6 h-6 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 7v10c0 2.21 3.582 4 8 4s8-1.79 8-4V7M4 7c0 2.21 3.582 4 8 4s8-1.79 8-4M4 7c0-2.21 3.582-4 8-4s8 1.79 8 4m0 5c0 2.21-3.582 4-8 4s-8-1.79-8-4"></path></svg>
+        <span class="ml-1">API Template Structure</span>
+      </h3>
+```mdx
+api/
+├── custom_backend
+│   ├── <module>_custom_backend.dart
+├── firebase
+│   ├── <module>_firebase.dart
+├── local
+│   ├── <module>_local_data.dart
+├── <module>_api_manager.dart
+├── <module>_repository.dart
+└── <other>_data_factory.dart
+```
+      <div class="mt-4 space-y-4">
+        <div class="bg-blue-100 dark:bg-blue-900 rounded p-4">
+          <h4 class="font-semibold text-blue-800 dark:text-blue-200 flex items-center">
+            <svg class="w-6 h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+            <span>Implementing your own backend:</span>
+          </h4>
+          <div class="text-blue-700 dark:text-blue-300 mt-2 leading-relaxed">
+           For implementing your own backend system use `api/custom_backend/<module>_custom_backend.dart` 
+            <p class="mt-2">We've provided an implementation for Firebase at <code>api/firebase/&lt;module&gt;_firebase.dart</code>, which you can use as a reference for developing your custom backend solution.</p>
+          </div>
+        </div>
+        <div class="bg-green-100 dark:bg-green-900 rounded p-4">
+          <h4 class="font-semibold text-green-800 dark:text-green-200 flex items-center">
+            <svg class="w-6 h-6 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+            <span>Updating the API Manager:</span>
+          </h4>
+          <p class="text-green-700 dark:text-green-300 mt-2 leading-relaxed">
+            In `api/api_manager.dart`, update the following after implementing your own backend:
+          </p>
+  ```mdx   
+var userReportingApiManager = UserReportingCustomBackend(); // choose your preferred implementation
+
+// var userReportingApiManager = UserReportingFireStoreUtils(); - comment this line
+  ```
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

@@ -9,6 +9,11 @@
   position: relative;
   overflow: hidden;
 }
+/* aline center and set a max width */
+.heroTagline {
+  max-width: 800px;
+  margin: 0 auto;
+}
 
 @media screen and (max-width: 996px) {
   .heroBanner {

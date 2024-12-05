@@ -1,0 +1,38 @@
+# Ads
+## Admob:
+By default our apps use Google’s AdMob service to present ads to users via Native ads, the Ads logic lives in `lib\core\utils\ads\ads_utils.dart`
+
+In order to to serve your own Ads your need to follow these steps:
+   + To get started with AdMob, first we must Sign up
+   + Add a new app to your newly created AdMob account, so we can obtain our AdMob App ID
+## Android Setup
++ Navigate to `android\app\src\main\AndroidManifest.xml`
++ Add the following meta-data tag to your application tag
+```mdx
+<manifest>
+  <application>
+    <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+    <meta-data
+      android:name="com.google.android.gms.ads.APPLICATION_ID"
+      android:value="ca-app-pub-xxxxxxxxxxxxxxxx~yyyyyyyyyy"/>
+  </application>
+</manifest>
+```  
++ Replace the android:value string with your AdMob App ID, You can find your App ID in the AdMob UI
+## iOS Setup
++ Navigate to __ios\Runner\Info.plist__
++ Add a __GADApplicationIdentifier__ key with a string value of your AdMob app ID. You can find your App ID in the AdMob UI  
+```mdx 
+<key>GADApplicationIdentifier</key>
+<string>Your_Admob_App_ID</string>
+```  
++ Add embeded view support
+```mdx 
+<key>io.flutter.embedded_views_preview</key>
+<true/>
+```
+## Dart Setup
+Navigate to __lib\services\AdsUtils.dart__
+change __AdsUtils.adUnitID__ to your AdMob app ID. You can find your App ID in the AdMob UI
+That’s it, now you should be able to see Ads that are connected to your AdMob account and start making revenue 🤑🤑
+

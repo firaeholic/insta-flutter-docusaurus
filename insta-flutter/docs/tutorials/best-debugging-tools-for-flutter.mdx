@@ -1,0 +1,139 @@
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+
+# Best Debugging Tools for Flutter: A Comprehensive Guide
+
+
+When developing apps using Flutter, there's a high likelihood you'll encounter bugs and issues. However, Flutter and its ecosystem provide an array of tools to help developers effectively debug and profile their apps. In this guide, we'll delve into some of the best debugging tools and techniques for Flutter developers.
+
+
+## Dart DevTools
+
+Dart DevTools is a suite of debugging and profiling tools for Dart and Flutter apps. Here's how to set it up and use it:
+
+
+1. #### Setup
+```dart
+flutter run
+```
+2. After running the above command, you will receive a URL to open Dart DevTools in your browser.
+
+3. Navigate through various tabs like Inspector, Timeline, Memory, Performance, Network to diagnose issues.
+
+## Flutter Inspector
+
+The Flutter Inspector provides a powerful visual tool to understand the widget tree. It aids in understanding layout issues, widget properties, and rendering.
+
+### Using Flutter Inspector
+
+1. Start your app in debugging mode
+2. Open Dart DevTools
+3. Navigate to the "Inspector" tab
+4. Select any widget from the visual tree to explore its properties
+
+:::tip
+Use the search functionality in Inspector to quickly find specific widgets in complex applications.
+:::
+
+## Flutter Outline
+
+Flutter Outline is a tool provided in many IDEs, including VSCode and IntelliJ/Android Studio. It presents a tree-like structure of your widgets, making it easier to navigate complex UIs.
+
+### IDE Integration
+
+<Tabs>
+<TabItem value="vscode" label="VS Code">
+
+1. Open the command palette (Cmd + Shift + P or Ctrl + Shift + P)
+2. Type "Flutter Outline" and select it
+
+</TabItem>
+
+  <TabItem value="android" label="Android Studio/IntelliJ">
+
+ Navigate to View > Tool Windows > Flutter Outline
+</TabItem>
+</Tabs>
+
+## Logging with print() and debugPrint()
+
+To log data or trace the execution flow, you can use the `print()` and `debugPrint()` functions.
+
+```dart
+void main() {
+  print("This is a print statement");
+  debugPrint("This is a debugPrint statement");
+}
+```
+
+:::note
+`debugPrint()` is especially useful in scenarios where the console might be overwhelmed by too many logs, as it throttles the output.
+:::
+
+## Flutter ErrorWidget
+
+ErrorWidget is a widget that displays an error. You can customize the error display by overriding the default behavior.
+
+```dart
+void main() {
+  ErrorWidget.builder = (FlutterErrorDetails details) {
+    return MyCustomErrorWidget(details: details);
+  };
+  runApp(MyApp());
+}
+```
+
+## Using Breakpoints
+
+Breakpoints allow you to pause code execution at a particular line. This is very helpful in tracing the execution flow, examining variable values, and stepping through code.
+
+#### Setting Breakpoints
+
+<div className="row">
+  <div className="col col--6">
+    <div className="card">
+      <div className="card__header">
+        <h3>VSCode</h3>
+      </div>
+      <div className="card__body">
+        Click on the left margin next to the line number where you want to place the breakpoint.
+      </div>
+    </div>
+  </div>
+  <div className="col col--6">
+    <div className="card">
+      <div className="card__header">
+        <h3>Android Studio/IntelliJ</h3>
+      </div>
+      <div className="card__body">
+        Click on the left gutter area next to the line number.
+      </div>
+    </div>
+  </div>
+</div>
+
+## Performance Profiling
+
+Understanding the performance of your Flutter app is crucial. Dart DevTools provides a performance tab to profile the app's performance.
+
+#### Steps to Profile
+
+1. Start your app in debug mode
+2. Open Dart DevTools and navigate to the "Performance" tab
+3. Click on "Record" to start profiling
+4. Interact with your app
+5. Click "Stop" to end profiling
+6. Analyze the results to identify performance bottlenecks
+
+:::caution
+Always profile your app in release mode for accurate performance measurements.
+:::
+
+## Conclusion
+
+Flutter offers a wide range of debugging and profiling tools that empower developers to create efficient and bug-free applications. Incorporate these tools into your development process to elevate your Flutter development experience.
+
+:::note 
+This tutorial provides an overview. For more in-depth details, developers should refer to the official Flutter documentation and respective IDE documentation.
+:::

@@ -1,0 +1,355 @@
+import Note from "@theme/Admonition";
+import Admonition from "@theme/Admonition";
+import Tabs from "@theme/Tabs";
+import TabItem from "@theme/TabItem";
+
+# How to Implement Video Calls in Flutter with Twilio
+
+Video calls have become an essential feature in modern applications. This guide walks you through implementing video calls in Flutter using Twilio's Programmable Video SDK.
+
+
+<Note title="Prerequisites">
+Before starting, ensure you have:
+
+- Flutter SDK (3.16.0 or later) installed
+- An IDE (VS Code or Android Studio)
+- A Twilio account
+- Basic knowledge of Dart and Flutter
+</Note>
+
+
+## Project Setup
+
+### Create New Flutter Project
+
+<Tabs>
+  <TabItem value="terminal" label="Terminal">
+
+```bash
+flutter create video_call_app
+cd video_call_app
+```
+
+</TabItem>
+
+ <TabItem value="dependencies" label="Dependencies">
+
+Add Dependencies
+Add the following to your pubspec.yaml:
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  twilio_programmable_video: ^1.0.0 # Latest stable version
+  permission_handler: ^11.0.0 # For handling permissions
+```
+
+</TabItem>
+
+ <TabItem value="installation" label="Installation">
+
+````
+Run the dependency installation:
+
+```bash
+flutter pub get
+
+````
+
+</TabItem>
+
+</Tabs>
+
+### Twilio Setup
+
+1. Create Twilio Account
+   Sign up at Twilio Console
+   Navigate to Programmable Video
+   Create a new API Key and Secret
+2. Configure Permissions
+   Add these permissions to your Android and iOS configurations:
+
+<Tabs>
+
+<TabItem value="android" label="Android">
+
+```xml
+<manifest>
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- ... rest of your manifest file -->
+</manifest>
+
+```
+
+</TabItem>
+
+<TabItem value="ios" label="iOS">
+
+```xml
+<dict>
+    <key>NSCameraUsageDescription</key>
+    <string>Need camera access for video calls</string>
+    <key>NSMicrophoneUsageDescription</key>
+    <string>Need microphone access for video calls</string>
+    <!-- ... rest of your plist file -->
+</dict>
+```
+
+</TabItem>
+
+</Tabs>
+
+### Implementation
+Video Call Service
+Create a service to handle Twilio video calls:
+
+```dart
+import 'package:twilio_programmable_video/twilio_programmable_video.dart';
+import 'package:permission_handler/permission_handler.dart';
+
+class VideoCallService {
+  Room? _room;
+
+  Future<bool> requestPermissions() async {
+    await [
+      Permission.camera,
+      Permission.microphone,
+    ].request();
+
+    return await Permission.camera.isGranted &&
+        await Permission.microphone.isGranted;
+  }
+
+  Future<Room?> connectToRoom(String accessToken, String roomName) async {
+    try {
+      final connectOptions = ConnectOptions(
+        accessToken,
+        roomName: roomName,
+        enableNetworkQuality: true,
+        enableDominantSpeaker: true,
+        preferredAudioCodecs: [OpusCodec()],
+        preferredVideoCodecs: [H264Codec()],
+        enableAutomaticSubscription: true,
+      );
+
+      _room = await TwilioProgrammableVideo.connect(connectOptions);
+      return _room;
+    } catch (e) {
+      print('Error connecting to room: $e');
+      return null;
+    }
+  }
+
+  Future<void> disconnect() async {
+    try {
+      await _room?.disconnect();
+      _room = null;
+    } catch (e) {
+      print('Error disconnecting from room: $e');
+    }
+  }
+}
+```
+
+Video Call Screen
+Create a screen to display the video call:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:twilio_programmable_video/twilio_programmable_video.dart';
+
+class VideoCallScreen extends StatefulWidget {
+  final String accessToken;
+  final String roomName;
+
+  const VideoCallScreen({
+    super.key,
+    required this.accessToken,
+    required this.roomName,
+  });
+
+  @override
+  _VideoCallScreenState createState() => _VideoCallScreenState();
+}
+
+class _VideoCallScreenState extends State<VideoCallScreen> {
+  Room? _room;
+  LocalVideoTrack? _localVideoTrack;
+  List<RemoteParticipant> _remoteParticipants = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _connectToRoom();
+  }
+
+  Future<void> _connectToRoom() async {
+    try {
+      final cameraCapturer = CameraCapturer(CameraSource.fromMap(
+        {
+          'source': 'camera',
+          'cameraSource': 'back',
+        },
+      ));
+      _localVideoTrack = LocalVideoTrack(true, cameraCapturer);
+      final connectOptions = ConnectOptions(
+        widget.accessToken,
+        roomName: widget.roomName,
+        videoTracks: [_localVideoTrack!],
+      );
+      _room = await TwilioProgrammableVideo.connect(connectOptions);
+      setState(() {
+        _remoteParticipants = _room?.remoteParticipants ?? [];
+      });
+    } catch (e) {
+      print('Error connecting to room: $e');
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Video Call'),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.call_end),
+            color: Colors.red,
+            onPressed: () async {
+              await _room?.disconnect();
+            if(!context.mounted){
+              return;
+            }  Navigator.pop(context);
+            },
+          ),
+        ],
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            // Local video
+            Expanded(
+              flex: 1,
+              child: _localVideoTrack != null
+                  ? _LocalVideoTrackWidget(_localVideoTrack!)
+                  : Center(child: CircularProgressIndicator()),
+            ),
+            // Remote videos
+            Expanded(
+              flex: 3,
+              child: ListView.builder(
+                itemCount: _remoteParticipants.length,
+                itemBuilder: (context, index) {
+                  return _RemoteParticipantWidget(
+                    _remoteParticipants[index],
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    _localVideoTrack?.release();
+    _room?.disconnect();
+    super.dispose();
+  }
+}
+
+
+class _LocalVideoTrackWidget extends StatelessWidget {
+  final LocalVideoTrack localVideoTrack;
+
+  const _LocalVideoTrackWidget(this.localVideoTrack, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        border: Border.all(color: Colors.blueAccent),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      margin: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(10),
+      child: localVideoTrack.widget(),
+    );
+  }
+}
+
+class _RemoteParticipantWidget extends StatelessWidget {
+  final RemoteParticipant participant;
+
+  const _RemoteParticipantWidget(this.participant, {super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    List<Widget> videoWidgets = participant.remoteVideoTracks.map(
+            (track) {
+      if (track.isTrackEnabled) {
+        return Container(
+          decoration: BoxDecoration(
+            border: Border.all(color: Colors.redAccent),
+            borderRadius: BorderRadius.circular(10),
+          ),
+          margin: const EdgeInsets.all(10),
+          padding: const EdgeInsets.all(10),
+          child: track.remoteVideoTrack?.widget(),
+        );
+      } else {
+        return Container();
+      }
+    }).toList();
+
+    return Column(
+      children: videoWidgets,
+    );
+  }
+}
+```
+
+Usage Example
+Here's how to use the video call implementation:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:video_call_app/video_call_screen.dart';
+
+void main() {
+  runApp(const MyApp());
+}
+
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      home: Scaffold(
+        body: Center(
+          child: ElevatedButton(
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const VideoCallScreen(
+                    accessToken: 'YOUR_ACCESS_TOKEN',
+                    roomName: 'ROOM_NAME',
+                  ),
+                ),
+              );
+            },
+            child: const Text('Start Video Call'),
+          ),
+        ),
+      ),
+    );
+  }
+}
+```

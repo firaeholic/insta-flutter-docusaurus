@@ -1,0 +1,185 @@
+import Note from "@theme/Admonition";
+import Admonition from "@theme/Admonition";
+
+# Flutter WebView – Loading Websites and HTML in Flutter
+
+<Admonition type="info" title="Overview" icon="💡">
+In this article we’ll show you how to integrate and use the Flutter Webview. A webview is an important element in mobile applications which allows users to browse web pages in the app screen itself. This basically means loading HTML, CSS, and JavaScript into a native mobile application. Here, we are going to explore the webview package in the Flutter ecosystem. The package name is [`webview_flutter`](https://pub.dev/packages/webview_flutter).
+</Admonition>
+
+This package provides us with a simple WebView widget that enables us to access webpages in the Flutter application and browse through them. The package supports both the Android and iOS platforms. Along with the integration of this package in the Flutter project, we are also going to learn how to use it in a proper way. The tutorial also demonstrates the standard way of coding in the Flutter ecosystem to make the code clean and easy to understand. So, let’s get started!
+
+## Create a New Flutter Project
+
+First, we need to create a new Flutter project. For that, make sure that the Flutter SDK and other Flutter app development related requirements are properly installed. If everything is properly set up, then in order to create a project, we can simply run the following command in the desired local directory:
+
+```bash
+ flutter create webview_example
+```
+
+After the project has been set up, go head and give it a run.
+
+## Scaffolding the Project
+
+Now, we need to replace the default template with our own project structure template. First, we need to create a folder called `./screens` inside the `./lib` folder. Then, inside the `./lib/screens` folder, we need to create a new file called `home_page.dart`. Inside the `home_page.dart`, we are going to implement a simple Stateful widget class returning a Scaffold widget with a basic AppBar and a ElevatedButton button. The code for `home_page.dart` is shown in the code snippet below:
+
+```dart
+import 'package:flutter/material.dart';
+
+class HomePage extends StatefulWidget {
+  const HomePage({super.key});
+
+  @override
+  _HomePageState createState() => _HomePageState();
+}
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Web View Example", style: TextStyle(color: Colors.black87),),
+        centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: Colors.white70,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Open Web View"),
+          onPressed: () {},
+        ),
+      ),
+    );
+  }
+}
+
+```
+Now, we need to replace the default template in the `main.dart` file and call the `HomePage` screen in the home option of `MaterialApp` widget as shown in the code snippet below:
+
+```dart
+import 'package:flutter/material.dart';
+
+import 'home_page.dart';
+void main() {
+  runApp(const MyApp());
+}
+class MyApp extends StatelessWidget {
+  const MyApp({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Web View Demo',
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(
+        primarySwatch: Colors.blue,
+        visualDensity: VisualDensity.adaptivePlatformDensity,
+      ),
+      home: HomePage(),
+    );
+  }
+}
+```
+
+Hence, we will get the result as shown in the code snippet below:
+
+## Install the Flutter WebView Package
+
+Now, we are going to install the `webview_flutter` package into our Flutter project. For that, we need to add the following line in the dependencies section inside the `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  webview_flutter: 4.10.0
+```
+
+This package provides a WebView widget to be used in the Flutter ecosystem. It helps to run webpages inside the Flutter application on both Android and iOS devices. While installing this plugin, check that the `minSdkVersion` in the `./android/app/build.gradle` should be greater than or equal to 19:
+
+```mdx
+minSdkVersion 19
+```
+
+## Creating a Web View Screen
+
+Now, we are going to create a Web View screen that will browse the website with the help of the WebView widget. First, we need to create a file called `webview_page.dart` inside the `./lib/screens` folder. Then inside the `webview_page.dart` file, we can implement the WebView code as shown in the code snippet below:
+
+```dart
+import 'package:flutter/material.dart';
+import 'package:webview_flutter/webview_flutter.dart';
+
+class WebViewPage extends StatefulWidget {
+  final String url;
+
+  const WebViewPage({super.key, required this.url});
+
+  @override
+  State<WebViewPage> createState() => _WebViewPageState();
+}
+
+class _WebViewPageState extends State<WebViewPage> {
+  late final WebViewController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = WebViewController()
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.url));
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: WebViewWidget(controller: _controller),
+    );
+  }
+}
+```
+
+Here, we have created a stateless widget class that takes `url` as a parameter value. This widget class returns the Scaffold widget with the WebView widget as its body. We also have initialized a WebViewController that handles the activities and process of web page loading in the WebView widget. Now in the `ElevatedButton` widget in `home_page.dart` file, we can add the code to navigate to `webview_page` screen. For that, we need to use the Navigator method on the `onPressed` event of the `ElevatedButton` widget as shown in the code snippet below:
+
+```dart
+class _HomePageState extends State<HomePage> {
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text(
+          "Web View Example",
+          style: TextStyle(color: Colors.black87),
+        ),
+        centerTitle: true,
+        elevation: 0.0,
+        backgroundColor: Colors.white70,
+      ),
+      body: Center(
+        child: ElevatedButton(
+          child: const Text("Open Web View"),
+          onPressed: () {
+            Navigator.of(context).push(MaterialPageRoute(
+                builder: (BuildContext context) => const WebViewPage(
+                      url: "https://instaflutter.com",
+                    )));
+          },
+        ),
+      ),
+    );
+  }
+}
+
+```
+
+Here, we have passed the URL value as the instaflutter website. Now once we press on the `ElevatedButton` in the screen, the app navigates to the `WebViewPage` screen and browsers the webpage mentioned in the URL value. Hence, we can see the result of the `WebViewPage` screen in the demo below:
+
+<img
+  src={
+    require("../../static/img/Screen_recording_20241018_155241.gif")
+      .default
+  }
+  alt="Screenshot of the app"
+  style={{ width: "35%", height: "25%", display: "block", margin: "0 auto" }}
+/>
+
+
+Finally, we have successfully integrated and used the <span style={{color: 'red'}}> webview_flutter </span> package in the Flutter to browse the webpages in the app itself.
+
+## Conclusion
+The major goal of this tutorial was to explore the use cases of the flutter webview package to implement the webview in the Flutter application. The availability of this plugin has made it easier to browse webpages inside the Flutter application. All we need to do was to pass a simple URL to the WebView widget provided by the plugin. The configuration of the WebView widget is simple and easy. With this, we can browse through any webpage and load HTML/CSS and JavaScript on the Flutter application. It can be a static webpage binding as well as dynamic. Hope the implementation process shown was easy to understand. The tutorial also makes sure that you learn the proper standards of Flutter coding to make the overall project code clean and concise.

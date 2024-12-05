@@ -1,0 +1,171 @@
+import Note from "@theme/Admonition";
+import Admonition from "@theme/Admonition";
+
+# How to Use Firebase Firestore in Flutter
+
+Welcome to this comprehensive guide on how to use Firebase Firestore in Flutter. In this tutorial, we will build a basic todo app in Flutter that uses Firebase Firestore as its backend.
+
+### Prerequisites
+
+To get started, you will need to set up your Flutter app. If you already have a Flutter app, you can skip this step.
+
+### Setting Up the Flutter App
+
+To set up a new Flutter app, open the terminal and run the following command:
+
+```bash
+flutter create my_todo_app
+```
+
+This will create a new Flutter project called `my_todo_app`.
+
+### Adding All Firebase Dependencies
+
+Once you have your app set up, you need to add the Firebase dependencies. Add this to your project by heading to `pubspec.yaml` and running <code> flutter pub get </code> :
+
+```yaml
+dependencies:
+  flutter:
+    sdk: flutter
+  firebase_core: 3.6.0 
+  cloud_firestore: 5.4.4
+```
+
+### Setting Up Firestore Read and Write Access Rules
+
+Before we can start writing and reading to and from Firestore, we need to set up the access rules. To do this, open the Firebase console and select your project. Then select the Firestore tab, and then select the Rules tab.
+
+In the rules tab, update the rules to the following:
+
+```js
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /{document=**} {
+      allow read, write: if true;
+    }
+  }
+}
+```
+
+These rules will allow read and write access from anywhere.
+
+### Writing to Firestore from Flutter
+
+Now that we have everything set up, we can start writing to Firestore from our Flutter app. To do this, we will create a `Todo` class that will represent a single todo item.
+
+```dart
+class Todo {
+  String title;
+  bool isDone;
+  
+  Todo(this.title, this.isDone);
+  
+  Todo.fromMap(Map<String, dynamic> map)
+      : title = map['title'],
+        isDone = map['isDone'];
+        
+  Map<String, dynamic> toMap() {
+    return {
+      'title': title,
+      'isDone': isDone,
+    };
+  }
+}
+```
+
+The `Todo` class has two properties, `title` and `isDone`, and two methods, `fromMap` and `toMap`, that are used to convert the object to and from a `Map` object.
+
+Now we can write a function that will add a new todo item to Firestore.
+
+```dart
+Future<void> addTodo(Todo todo) async {
+  Firestore.instance.collection('todos').add(todo.toMap());
+}
+```
+
+The `addTodo` function takes a `Todo` object as an argument and adds it to the `todos` collection in Firestore.
+
+### Reading Single Objects from Firestore
+
+Now that we can write to Firestore, let’s write a function to read a single todo from Firestore.
+
+```dart
+Future<Todo> getTodo(String id) async {
+  DocumentSnapshot snapshot =
+      await Firestore.instance.collection('todos').document(id).get();
+  return Todo.fromMap(snapshot.data);
+}
+```
+
+The `getTodo` function takes an `id` as an argument and fetches the todo from the `todos` collection. It then returns a `Todo` object created from the data in the `DocumentSnapshot`.
+
+### Reading & Displaying Lists of Objects
+
+Now that we can read single objects from Firestore, let’s write a function to read a list of todos.
+
+```dart
+Future<List<Todo>> getTodos() async {
+  QuerySnapshot snapshot =
+      await Firestore.instance.collection('todos').getDocuments();
+  return snapshot.documents.map((doc) => Todo.fromMap(doc.data)).toList();
+}
+```
+
+The `getTodos` function fetches a `QuerySnapshot` from the `todos` collection, then maps each document in the snapshot to a `Todo` object and returns a list of `Todo` objects.
+
+### Listening to Real-Time Updates
+
+Now that we can read lists of objects from Firestore, let’s write a function to listen for real-time updates.
+
+```dart
+Stream<List<Todo>> getTodosStream() {
+  return Firestore.instance
+      .collection('todos')
+      .snapshots()
+      .map((snapshot) =>
+          snapshot.documents.map((doc) => Todo.fromMap(doc.data)).toList());
+}
+```
+
+The `getTodosStream` function returns a `Stream` of `Todo` objects that will emit new values whenever the `todos` collection is updated.
+
+### Batch Updates to Improve Performance
+
+Now that we can listen for real-time updates, let’s write a function to batch update multiple todos in Firestore.
+
+```dart
+Future<void> batchUpdateTodos(List<Todo> todos) async {
+  WriteBatch batch = Firestore.instance.batch();
+  todos.forEach((todo) {
+    DocumentReference ref =
+        Firestore.instance.collection('todos').document(todo.id);
+    batch.updateData(ref, todo.toMap());
+  });
+  await batch.commit();
+}
+```
+
+The `batchUpdateTodos` function takes a list of `Todo` objects and creates a `WriteBatch` with updates for each `Todo`. It then commits the batch and returns a `Future` when the batch is finished.
+
+### How to Paginate Lists from Firestore
+
+Now that we can batch update todos, let’s write a function to paginate lists of todos from Firestore.
+
+```dart
+Future<List<Todo>> paginateTodos(int page) async {
+  QuerySnapshot snapshot = await Firestore.instance
+      .collection('todos')
+      .orderBy('title')
+      .limit(10)
+      .offset(page * 10)
+      .getDocuments();
+  return snapshot.documents.map((doc) => Todo.fromMap(doc.data)).toList();
+}
+```
+
+The `paginateTodos` function takes a page number as an argument and fetches a `QuerySnapshot` from the `todos` collection. It orders the todos by title, limits the results to 10, and offsets the results by the page number times 10. It then maps each document in the snapshot to a `Todo` object and returns a list of `Todo` objects.
+
+### Conclusion
+
+In this tutorial, we have covered how to use Firebase Firestore in Flutter. We have set up the Flutter app, added all Firebase dependencies, set up read and write access rules, written to Firestore from Flutter, read single objects from Firestore, read & displayed lists of objects, listened to real-time updates, batch updates to improve performance, and how to paginate lists from Firestore. We have also built a basic todo app in all code examples.

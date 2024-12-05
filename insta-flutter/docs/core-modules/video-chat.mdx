@@ -1,0 +1,212 @@
+# Video Chat
+
+## Overview
+
+Our application implements robust video and audio calling functionality using WebRTC (Web Real-Time Communication), an industry-standard technology backed by tech giants like Google, Apple, and Microsoft. This document explains how our video chat feature works, its architecture, and key components.
+
+## Technology Stack
+
+- **WebRTC**: Core technology for peer-to-peer communication
+- **flutter_webrtc**: Flutter plugin enabling WebRTC integration
+- **Firebase**: Acts as the signaling server
+
+## How It Works
+
+### Basic Flow
+
+1. **Call Initiation**:
+
+   - User A initiates a call.
+   - A WebRTC peer connection is created.
+   - An "offer" (session description) is generated.
+   - The offer is sent to Firebase (signaling server).
+
+2. **Call Reception**:
+
+   - User B's device listens for incoming call signals.
+   - Receives the offer from Firebase.
+   - Displays the incoming call screen.
+
+3. **Call Acceptance**:
+
+   - User B accepts the call.
+   - Creates a peer connection.
+   - Generates an "answer" (session description).
+   - Sends the answer back through Firebase to User A.
+
+4. **Connection Establishment**:
+   - Devices exchange ICE candidates via Firebase.
+   - A direct peer-to-peer connection is established.
+   - Video/audio streams flow directly between devices.
+
+## Key Components
+
+#### 1. WebRTC Configuration
+
+```dart
+final Map<String, dynamic> _iceServers = {
+  'iceServers': [
+    {'url': 'stun:stun.l.google.com:19302'},
+    {
+      'url': 'turn:95.217.132.49:80?transport=udp',
+      'username': 'c38d01c8',
+      'credential': 'f7bf2454'
+    },
+    {
+      'url': 'turn:95.217.132.49:80?transport=tcp',
+      'username': 'c38d01c8',
+      'credential': 'f7bf2454'
+    },
+  ]
+};
+```
+
+- **STUN Server**: Helps devices discover their public IP address.
+- **TURN Server**: Acts as a relay when a direct connection fails. Ensures calls work even behind strict firewalls and across different network conditions.
+
+#### 2. User Interface Components
+
+We have dedicated screens for different call types:
+
+- **VideoCallScreen**
+- **VideoCallsGroupScreen**
+- **VoiceCallScreen**
+- **VoiceCallsGroupScreen**
+
+Each screen handles both incoming and outgoing call displays with *key features* like:
+
+- Video preview (for video calls)
+- Remote participant display
+- Audio mute/unmute
+- Speaker toggle
+- Call end button
+
+```dart
+class VideoCallScreen extends StatefulWidget {
+  final bool isCaller;
+  final String? sessionDescription;
+  final ChannelDataModel channelDataModel;
+  // ... other parameters
+}
+
+```
+
+#### 3. Call Handling Logic
+
+We have specialized handlers for each call type:
+
+- **VideoCallsHandler**
+- **GroupVideoCallsHandler**
+- **VoiceCallsHandler**
+- **GroupVoiceCallsHandler**
+
+These handlers are responsible for:
+
+- Managing WebRTC peer connections
+- Handling signaling via Firebase
+- Managing media streams
+- Coordinating call state changes
+
+
+
+**Key Methods**:
+
+```dart
+void initCall(String token, String peerID, BuildContext context)
+void acceptCall(String sessionDescription, String sessionType)
+void bye()  // Ends the call
+
+```
+
+#### 4. Firebase Integration
+
+Firebase serves as our signaling server:
+
+- Enables real-time call state synchronization.
+- Reliably delivers offers, answers, and ICE candidates.
+- Handles call timeout and cleanup.
+
+Example of sending an offer:
+
+```dart
+await firestore
+    .collection(usersCollection)
+    .doc(data['to'])
+    .collection(callDataCollection)
+    .doc(selfId)
+    .set(request);
+
+```
+
+## Codebase Structure
+
+Our video and audio call functionality is implemented in the following structure:
+
+### One-on-One Calls
+
+- **`lib/core/ui/av_chat/video_call/video_call_screen.dart`**: Renders the incoming/outgoing calls screen for one-on-one video calls.
+- **`lib/core/ui/av_chat/video_call/video_calls_handler.dart`**: Core class managing one-on-one video calls. Handles call initiation, acceptance, and termination. Interacts directly with the WebRTC library.
+- **`lib/core/ui/av_chat/voice_call/voice_call_screen.dart`**: Renders the incoming/outgoing calls screen for one-on-one audio calls.
+- **`lib/core/ui/av_chat/voice_call/voice_calls_handler.dart`**: Core class managing one-on-one audio calls. Similar functionality to `VideoCallsHandler`, but for audio-only calls.
+
+### Group Calls
+
+- **`lib/core/ui/av_chat/video_calls_group_chat/VideoCallsGroupScreen.dart`**: Renders the incoming/outgoing calls screen for group video calls.
+- **`lib/core/ui/av_chat/video_calls_group_chat/group_video_calls_handler.dart`**: Manages group video calls. Handles multiple peer connections.
+- **`lib/core/ui/av_chat/voice_calls_group_chat/voice_calls_group_screen.dart`**: Renders the incoming/outgoing calls screen for group voice calls.
+- **`lib/core/ui/av_chat/voice_calls_group_chat/group_voice_calls_handler.dart`**: Manages group voice calls.
+
+### Incoming Call Listener
+
+- **`lib/<your-insta-flutter-app>/ui/container/container_screen.dart`**:
+  - Method: `_listenForCalls()`.
+  - Listens for incoming call signals from Firebase.
+  - Launches the appropriate call screen based on the signal type.
+
+## Advanced Features
+
+#### Timeout Handling
+
+Calls automatically end after 1 minute if not answered.
+
+```dart
+void startCountDown(BuildContext context) {
+  countdownTimer = Timer(const Duration(minutes: 1), () {
+    bye();
+    stopRingtone();
+    Navigator.of(context).pop();
+  });
+}
+
+```
+
+#### Busy Detection
+
+Prevents multiple incoming calls by checking if the recipient is already in a call.
+
+#### Call History
+
+Automatically logs calls in chat history and creates new chat channels if needed.
+
+## Common Issues and Solutions
+
+#### Call Failed to Connect
+
+- Ensure both users have stable internet.
+- Check if the TURN server is accessible.
+
+#### Ringtone not Present 
+
+- Check storage permission.
+
+#### One-Way Audio/Video
+
+- Verify microphone/camera permissions.
+- Check if media tracks are properly added to the peer connection.
+
+#### Call Drops
+
+- Implement reconnection logic.
+- Use multiple TURN servers for redundancy.
+
+

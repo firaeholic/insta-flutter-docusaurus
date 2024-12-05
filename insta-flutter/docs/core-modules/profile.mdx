@@ -1,0 +1,68 @@
+# User Profile
+
+The profile module, located in `lib/<your-instaflutter-app>/ui/profile/`, manages user profile functionality in the app. This overview provides a brief description of the main components and their purposes.
+
+## Key Components
+
+### Account Details
+
+- **Files**: `account_details_screen.dart`, `account_details_bloc.dart`
+- **Purpose**: Allows users to view and edit their account information
+- **Main Widget**: `AccountDetailsScreen`
+- **Key Methods**:
+  - `validateFields()`
+  - `submitData()`
+  - `updateUserData()`
+
+### Profile API
+
+- **Files**: `profile_firebase.dart`, `profile_repository.dart`
+- **Purpose**: Handles backend operations for user profiles
+- **Key Methods**:
+  - `updateCurrentUser()`
+  - `uploadUserImageToServer()`
+  - `deleteImageFromStorage()`
+
+:::tip
+
+A file named **`profile_custom_backend.dart`** is provided for you, located in `lib/<your-insta-flutter-app>/ui/profile/api/custom_backend/profile_custom_backend.dart`. This file is designed for implementing profile management with a custom backend. If you choose to use your own backend system, you will need to complete the implementation in this file. We have already implemented for firebase this `profile_firebase.dart file`, which can serve as a guide for how to structure your custom backend implementation.
+:::
+
+(If you choose to implement your own custom backend) - Go to file **profile_api_manager.dart** inside `lib/<your-insta-flutter-app>/ui/auth/api/auth_api_manager.dart` and uncomment the line :
+
+```dart
+var profileApiManager = ProfileCustomBackendUtils();
+
+// var profileApiManager = ProfileFirebaseUtils(); - comment this line
+
+```
+
+### Contact Support
+
+- **File**: `contact_us_screen.dart`
+- **Purpose**: Provides a way for users to contact app support
+- **Main Widget**: `ContactUsScreen`
+
+### Profile Screen
+
+- **File**: `profile_screen.dart`, `profile_bloc.dart`
+- **Purpose**: Displays user profile and navigation to other profile-related screens
+- **Main Widget**: `ProfileScreen`
+- **Key Methods**:
+  - `chooseImageFromGallery()`
+  - `captureImageByCamera()`
+  - `updateUserImage()`
+  - `deleteUserImage()`
+
+### Settings
+
+- **Files**: `settings_screen.dart`, `settings_bloc.dart`
+- **Purpose**: Allows users to configure app settings
+- **Main Widget**: `SettingsScreen`
+- **Key Methods**:
+  - `togglePushNotifications()`
+  - `saveSettings()`
+
+## Summary
+
+The profile module manages all aspects of user profiles, including viewing and editing account details, configuring settings, and contacting support. It uses a combination of screen widgets and BLoC pattern for state management, with a separate API layer for backend operations.
