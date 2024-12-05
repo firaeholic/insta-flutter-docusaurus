@@ -1,7 +1,6 @@
 ---
-sidebar_position: 2
-slug: Debugging Flutter App Using DevTools
-title: Debugging Flutter App Using DevTools
+slug: how-to-add-maps-in-flutter-apps
+title: How to Add Maps in Flutter Apps
 date: 2024-09-13T18:00
 ---
 
