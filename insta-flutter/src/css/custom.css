@@ -28,7 +28,9 @@
   --ifm-color-primary-lightest: #a1aff5;
   --docusaurus-highlighted-code-line-bg: rgba(0, 0, 0, 0.3);
 }
-
+.blogPostMeta .date {
+  display: none !important;
+}
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

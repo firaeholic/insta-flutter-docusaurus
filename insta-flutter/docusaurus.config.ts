@@ -70,7 +70,8 @@ const config: Config = {
 
         },
         blog: {
-          showReadingTime: true,
+          routeBasePath: '/blog',
+          showReadingTime: false,
         },
         
         sitemap: {
@@ -109,7 +110,7 @@ const config: Config = {
           position: 'left',
           label: 'Docs',
         },
-        // {to: '/blog', label: 'Blog', position: 'left'},
+        {to: '/blog', sidebarId: 'blogsSidebar', label: 'Blog', position: 'left'},
         {
           href: '/',
           label: 'Home',
