@@ -122,8 +122,8 @@ const config: Config = {
           position: 'right',
         },
         {
-          href: 'https://instaflutter.com/blog/',
-          label: 'Blog',
+          href: '/contact-us',
+          label: 'Contact Us',
           position: 'right',
         },
       ],
