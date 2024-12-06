@@ -25,10 +25,10 @@ import NavbarSection from "../components/black-friday/NavbarSection";
 const App: React.FC = () => {
   return (
     <div>
-      <NavbarSection logoSrc="https://docs.instaflutter.com/img/logo.png"
+      {/* <NavbarSection logoSrc="https://docs.instaflutter.com/img/logo.png"
         logoAlt="Instaflutter Logo"
         pricingLink="#pricing"
-        backToSiteLink="https://instaflutter.com/templates" />
+        backToSiteLink="https://instaflutter.com/templates" /> */}
         
       <HeroSection
         headline={heroData.headline}

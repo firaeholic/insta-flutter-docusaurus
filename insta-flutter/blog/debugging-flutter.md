@@ -1,6 +1,6 @@
 ---
-slug: how-to-add-maps-in-flutter-apps
-title: How to Add Maps in Flutter Apps
-date: 2024-09-13T18:00
+slug: debugging-flutter-app-using-devTools
+title: Debugging Flutter App Using DevTools
+date: 2024-09-13T17:00
 ---
 
