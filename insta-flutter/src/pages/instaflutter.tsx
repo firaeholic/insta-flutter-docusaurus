@@ -1,4 +1,5 @@
 import React from "react";
+import MegaBundleBanner from "../components/black-friday/MegaBundleBanner";
 import HeroSection from "../components/black-friday/hero";
 import heroData from "../../data/flutter/heroData.json";
 import ValuePropositionSection from "../components/black-friday/ValuePropositionSection";
@@ -25,6 +26,7 @@ import NavbarSection from "../components/black-friday/NavbarSection";
 const App: React.FC = () => {
   return (
     <div>
+    <MegaBundleBanner />
       {/* <NavbarSection logoSrc="https://docs.instaflutter.com/img/logo.png"
         logoAlt="Instaflutter Logo"
         pricingLink="#pricing"
